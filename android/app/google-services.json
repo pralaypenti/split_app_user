@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "184769929378",
+    "project_id": "pralay-58be9",
+    "storage_bucket": "pralay-58be9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:184769929378:android:cdab9ebd2d376024d637fb",
+        "android_client_info": {
+          "package_name": "com.example.split_app_user"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "184769929378-ujq26l28plipqgan46v39k5o3hpn8mor.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBJlzMo4zUyvnN2imGfqmhgdbNpVD0mHw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "184769929378-ujq26l28plipqgan46v39k5o3hpn8mor.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "184769929378-ldeisqpbsfo27mcos1v7kvnh0in3cjdl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.splitAppUser"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
