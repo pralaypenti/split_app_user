@@ -19,7 +19,9 @@ import 'ui/screens/settle_up_screen.dart';
 import 'bloc/group_bloc.dart';
 
 class SplitApp extends StatelessWidget {
-  const SplitApp({super.key});
+  final HiveRepo hiveRepo;
+
+  const SplitApp({super.key, required this.hiveRepo});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class SplitApp extends StatelessWidget {
           create: (_) => AuthBloc(authRepository: authRepo)..add(AppStarted()),
         ),
         BlocProvider(
-          create: (_) => GroupBloc(repo: InMemoryRepo())..add(GroupStarted()),
+          create: (_) => GroupBloc(repo: hiveRepo)..add(GroupStarted()),
         ),
       ],
       child: MaterialApp(
@@ -51,7 +53,7 @@ class SplitApp extends StatelessWidget {
             final user = FirebaseAuth.instance.currentUser;
             return AddMembersScreen(
               defaultMember: Member(
-                id: user?.uid ?? '1', 
+                id: user?.uid ?? '1',
                 name: user?.displayName ?? user?.email ?? 'Guest User',
               ),
             );

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:split_app_user/src/models/expense.dart';
+import 'package:split_app_user/src/models/group.dart';
+import 'package:split_app_user/src/models/member.dart';
 import 'package:split_app_user/src/ui/screens/login_screen.dart';
 
 import 'firebase_options.dart';
@@ -21,8 +25,14 @@ Future<void> main() async {
     debugPrintStack(stackTrace: stack);
   }
 
-  final repo = InMemoryRepo();
+ await Hive.initFlutter();
 
+  Hive.registerAdapter(GroupAdapter());
+  Hive.registerAdapter(MemberAdapter());
+  Hive.registerAdapter(ExpenseAdapter());
+
+  final groupBox = await Hive.openBox<Group>('groups');
+  final repo = HiveRepo(groupBox);
   runApp(
     MultiBlocProvider(
       providers: [
@@ -32,7 +42,7 @@ Future<void> main() async {
               AuthBloc(authRepository: AuthRepository())..add(AppStarted()),
         ),
       ],
-      child: const SplitApp(),
+      child: SplitApp(hiveRepo: repo),
     ),
   );
 }

@@ -1,7 +1,7 @@
-import 'dart:math';
+import 'package:hive/hive.dart';
+import '../models/group.dart';
 import '../models/member.dart';
 import '../models/expense.dart';
-import '../models/group.dart';
 
 abstract class Repo {
   Future<List<Group>> fetchGroups();
@@ -10,45 +10,48 @@ abstract class Repo {
   Future<void> deleteGroup(Group group);
 }
 
-class InMemoryRepo implements Repo {
-  final List<Group> _groups = [];
+class HiveRepo implements Repo {
+  final Box<Group> _groupBox;
+
+  HiveRepo(this._groupBox);
 
   @override
   Future<List<Group>> fetchGroups() async {
-    await Future<void>.delayed(const Duration(milliseconds: 150));
-    return List<Group>.unmodifiable(_groups);
+    return _groupBox.values.toList();
   }
 
   @override
   Future<Group> createGroup(
-    String name,
-    String category,
-    List<Member> members,
-  ) async {
-    final g = Group(
-      id: _id(),
+      String name, String category, List<Member> members) async {
+    final id = DateTime.now().millisecondsSinceEpoch.toString();
+    final group = Group(
+      id: id,
       name: name,
       category: category,
       members: members,
-      expenses: const [],
+      expenses: [],
     );
-    _groups.add(g);
-    return g;
+    await _groupBox.add(group);
+    return group;
   }
 
   @override
   Future<Group> addExpense(Group group, Expense expense) async {
-    final idx = _groups.indexWhere((e) => e.id == group.id);
-    if (idx == -1) throw StateError('Group not found');
+    final key = _groupBox.keys.firstWhere(
+      (k) => _groupBox.get(k)!.id == group.id,
+      orElse: () => throw StateError('Group not found'),
+    );
     final updated = group.copyWith(expenses: [...group.expenses, expense]);
-    _groups[idx] = updated;
+    await _groupBox.put(key, updated);
     return updated;
   }
 
   @override
   Future<void> deleteGroup(Group group) async {
-    _groups.removeWhere((g) => g.id == group.id);
+    final key = _groupBox.keys.firstWhere(
+      (k) => _groupBox.get(k)!.id == group.id,
+      orElse: () => throw StateError('Group not found'),
+    );
+    await _groupBox.delete(key);
   }
-
-  String _id() => Random().nextInt(1 << 32).toString();
 }

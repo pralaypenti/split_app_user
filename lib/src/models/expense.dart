@@ -1,20 +1,28 @@
-import 'package:equatable/equatable.dart';
+import 'package:hive/hive.dart';
+part 'expense.g.dart';
 
-class Expense extends Equatable {
+@HiveType(typeId: 2)
+class Expense extends HiveObject {
+  @HiveField(0)
   final String id;
+
+  @HiveField(1)
   final String title;
-  final int amount; 
-  final String paidBy; 
+
+  @HiveField(2)
+  final int amount;
+
+  @HiveField(3)
+  final String paidBy;
+
+  @HiveField(4)
   final DateTime createdAt;
 
-  const Expense({
+  Expense({
     required this.id,
     required this.title,
     required this.amount,
     required this.paidBy,
     required this.createdAt,
   });
-
-  @override
-  List<Object?> get props => [id, title, amount, paidBy, createdAt];
 }
