@@ -13,7 +13,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   int _currentPage = 0;
 
   final List<Map<String, String>> onboardingData = [
-   {
+    {
       "image": "assets/onbording.png",
       "title": "Easily split bills with friends",
       "subtitle": "Track group expenses and settle up fast.",
@@ -60,7 +60,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           onboardingData[index]["title"]!,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         const SizedBox(height: 12),
                         Text(
@@ -76,7 +78,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
 
-            // Dots indicator
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
@@ -97,7 +98,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
             const SizedBox(height: 20),
 
-            // Button
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: ElevatedButton(

@@ -1,4 +1,5 @@
 // src/app.dart
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:split_app_user/src/models/member.dart';
@@ -46,7 +47,15 @@ class SplitApp extends StatelessWidget {
           ForgotPasswordScreen.routeName: (_) => const ForgotPasswordScreen(),
           HomeScreen.routeName: (_) => const HomeScreen(),
           CreateGroupScreen.routeName: (_) => const CreateGroupScreen(),
-          AddMembersScreen.routeName: (_) => const AddMembersScreen(defaultMember: Member(id: '1', name: 'John Doe'),),
+          AddMembersScreen.routeName: (_) {
+            final user = FirebaseAuth.instance.currentUser;
+            return AddMembersScreen(
+              defaultMember: Member(
+                id: user?.uid ?? '1', 
+                name: user?.displayName ?? user?.email ?? 'Guest User',
+              ),
+            );
+          },
           GroupDetailsScreen.routeName: (_) => const GroupDetailsScreen(),
           AddExpenseScreen.routeName: (_) => const AddExpenseScreen(),
           SettleUpScreen.routeName: (_) => const SettleUpScreen(),

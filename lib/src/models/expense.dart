@@ -3,8 +3,8 @@ import 'package:equatable/equatable.dart';
 class Expense extends Equatable {
   final String id;
   final String title;
-  final int amount; // in INR
-  final String paidBy; // member id
+  final int amount; 
+  final String paidBy; 
   final DateTime createdAt;
 
   const Expense({

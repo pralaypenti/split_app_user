@@ -12,7 +12,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
-    // ✅ Initialize Firebase safely
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
@@ -27,11 +26,10 @@ Future<void> main() async {
   runApp(
     MultiBlocProvider(
       providers: [
+        BlocProvider(create: (_) => GroupBloc(repo: repo)..add(GroupStarted())),
         BlocProvider(
-          create: (_) => GroupBloc(repo: repo)..add(GroupStarted()),
-        ),
-        BlocProvider(
-          create: (_) => AuthBloc(authRepository: AuthRepository())..add(AppStarted()),
+          create: (_) =>
+              AuthBloc(authRepository: AuthRepository())..add(AppStarted()),
         ),
       ],
       child: const SplitApp(),

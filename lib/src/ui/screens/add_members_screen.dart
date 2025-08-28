@@ -4,7 +4,7 @@ import 'package:split_app_user/src/models/member.dart';
 
 class AddMembersScreen extends StatefulWidget {
   static const routeName = '/add-members';
-  final Member defaultMember; // The user creating the group
+  final Member defaultMember; 
 
   const AddMembersScreen({super.key, required this.defaultMember});
 
@@ -14,22 +14,26 @@ class AddMembersScreen extends StatefulWidget {
 
 class _AddMembersScreenState extends State<AddMembersScreen> {
   List<Member> _all = [];
-  final Set<String> _picked = {}; // Selected member IDs
+  final Set<String> _picked = {}; 
   bool _loading = true;
   String _search = '';
 
   @override
   void initState() {
     super.initState();
-    _picked.add(widget.defaultMember.id); // Automatically add default member
+    _picked.add(widget.defaultMember.id); 
     _fetchContacts();
   }
 
   Future<void> _fetchContacts() async {
     if (await FlutterContacts.requestPermission()) {
-      List<Contact> contacts = await FlutterContacts.getContacts(withProperties: true);
+      List<Contact> contacts = await FlutterContacts.getContacts(
+        withProperties: true,
+      );
+
+      if (!mounted) return;
+
       setState(() {
-        // Convert contacts to Member and exclude default member
         _all = contacts
             .where((c) => c.displayName != widget.defaultMember.name)
             .map((c) => Member(id: c.id, name: c.displayName))
@@ -37,6 +41,8 @@ class _AddMembersScreenState extends State<AddMembersScreen> {
         _loading = false;
       });
     } else {
+      if (!mounted) return;
+
       setState(() => _loading = false);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Contacts permission denied')),
@@ -66,11 +72,11 @@ class _AddMembersScreenState extends State<AddMembersScreen> {
                     onChanged: (v) => setState(() => _search = v),
                   ),
                 ),
-                // Show default member at top
+                
                 ListTile(
                   title: Text(widget.defaultMember.name),
                   leading: const Icon(Icons.person),
-                  trailing: const Text('Required'), // cannot uncheck
+                  trailing: const Text('Required'), 
                 ),
                 const Divider(),
                 Expanded(
@@ -80,8 +86,11 @@ class _AddMembersScreenState extends State<AddMembersScreen> {
                       return CheckboxListTile(
                         value: selected,
                         onChanged: (v) => setState(() {
-                          if (v == true) _picked.add(m.id);
-                          else _picked.remove(m.id);
+                          if (v == true) {
+                            _picked.add(m.id);
+                          } else {
+                            _picked.remove(m.id);
+                          }
                         }),
                         title: Text(m.name),
                       );
@@ -92,10 +101,9 @@ class _AddMembersScreenState extends State<AddMembersScreen> {
                   padding: const EdgeInsets.all(12),
                   child: ElevatedButton(
                     onPressed: () {
-                      // Include default member automatically
                       final chosen = [
                         widget.defaultMember,
-                        ..._all.where((m) => _picked.contains(m.id))
+                        ..._all.where((m) => _picked.contains(m.id)),
                       ];
                       Navigator.pop(context, chosen);
                     },

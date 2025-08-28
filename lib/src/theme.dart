@@ -11,7 +11,9 @@ ThemeData buildTheme() {
       displayColor: const Color(0xFF1D2A3A),
     ),
     inputDecorationTheme: const InputDecorationTheme(
-      border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(14))),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(14)),
+      ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
@@ -22,7 +24,9 @@ ThemeData buildTheme() {
     cardTheme: const CardThemeData(
       elevation: 0,
       margin: EdgeInsets.all(12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+      ),
     ),
   );
 }

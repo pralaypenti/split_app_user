@@ -40,9 +40,7 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
-              // Trigger logout via AuthBloc event
               context.read<AuthBloc>().add(LogoutRequested());
-              // Navigate back to login
               Navigator.pushReplacementNamed(context, LoginScreen.routeName);
             },
           ),

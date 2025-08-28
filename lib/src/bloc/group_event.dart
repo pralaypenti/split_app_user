@@ -31,6 +31,7 @@ class ActiveGroupChanged extends GroupEvent {
   @override
   List<Object?> get props => [group];
 }
+
 class DeleteGroup extends GroupEvent {
   final Group group;
 

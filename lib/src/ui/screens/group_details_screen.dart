@@ -22,13 +22,17 @@ class GroupDetailsScreen extends StatelessWidget {
               Text('Expenses'),
               const SizedBox(height: 8),
               if (g.expenses.isEmpty) const Text('No expenses yet'),
-              ...g.expenses.map((e) => Card(
-                child: ListTile(
-                  title: Text(e.title),
-                  trailing: Text('₹${e.amount}'),
-                  subtitle: Text('Paid by: ${g.members.firstWhere((m)=>m.id==e.paidBy).name}'),
+              ...g.expenses.map(
+                (e) => Card(
+                  child: ListTile(
+                    title: Text(e.title),
+                    trailing: Text('₹${e.amount}'),
+                    subtitle: Text(
+                      'Paid by: ${g.members.firstWhere((m) => m.id == e.paidBy).name}',
+                    ),
+                  ),
                 ),
-              )),
+              ),
               const SizedBox(height: 80),
             ],
           );

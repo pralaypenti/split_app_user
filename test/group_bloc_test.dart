@@ -6,7 +6,6 @@ import 'package:split_app_user/src/models/expense.dart';
 import 'package:split_app_user/src/models/member.dart';
 import 'package:split_app_user/src/repositories/in_memory_repo.dart';
 
-
 void main() {
   group('GroupBloc', () {
     late GroupBloc bloc;
@@ -22,8 +21,12 @@ void main() {
       build: () => bloc,
       act: (b) => b.add(GroupStarted()),
       expect: () => [
-        isA<GroupState>().having((s)=>s.status, 'status', GroupStatus.loading),
-        isA<GroupState>().having((s)=>s.status, 'status', GroupStatus.ready),
+        isA<GroupState>().having(
+          (s) => s.status,
+          'status',
+          GroupStatus.loading,
+        ),
+        isA<GroupState>().having((s) => s.status, 'status', GroupStatus.ready),
       ],
     );
 
@@ -33,10 +36,25 @@ void main() {
       act: (b) async {
         b.add(GroupStarted());
         await Future<void>.delayed(const Duration(milliseconds: 10));
-        b.add(CreateGroupRequested('Trip', 'Travel', const [Member(id:'a', name:'Alice'), Member(id:'b', name:'Bob')]));
+        b.add(
+          CreateGroupRequested('Trip', 'Travel', const [
+            Member(id: 'a', name: 'Alice'),
+            Member(id: 'b', name: 'Bob'),
+          ]),
+        );
         await Future<void>.delayed(const Duration(milliseconds: 10));
         final g = b.state.activeGroup!;
-        b.add(AddExpenseRequested(Expense(id:'1', title:'Taxi', amount:300, paidBy:g.members.first.id, createdAt:DateTime(2024))));
+        b.add(
+          AddExpenseRequested(
+            Expense(
+              id: '1',
+              title: 'Taxi',
+              amount: 300,
+              paidBy: g.members.first.id,
+              createdAt: DateTime(2024),
+            ),
+          ),
+        );
       },
       wait: const Duration(milliseconds: 100),
       expect: () => contains(isA<GroupState>()),
