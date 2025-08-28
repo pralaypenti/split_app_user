@@ -14,12 +14,14 @@ class SettleUpScreen extends StatelessWidget {
         builder: (context, state) {
           final g = state.activeGroup;
           if (g == null) return const Center(child: Text('No active group'));
-          // Simple equal split suggestions (no graph): who paid how much.
-          final totals = <String,int>{ for (final m in g.members) m.id: 0 };
+          final totals = <String, int>{for (final m in g.members) m.id: 0};
           for (final e in g.expenses) {
             totals[e.paidBy] = (totals[e.paidBy] ?? 0) + e.amount;
           }
-          final perHead = (g.expenses.fold<int>(0,(p,e)=>p+e.amount) / (g.members.length)).round();
+          final perHead =
+              (g.expenses.fold<int>(0, (p, e) => p + e.amount) /
+                      (g.members.length))
+                  .round();
           return ListView(
             padding: const EdgeInsets.all(12),
             children: [
@@ -27,11 +29,16 @@ class SettleUpScreen extends StatelessWidget {
               const SizedBox(height: 12),
               ...g.members.map((m) {
                 final diff = (totals[m.id] ?? 0) - perHead;
-                final text = diff >= 0 ? '${m.name} should receive ₹$diff' : '${m.name} owes ₹${-diff}';
+                final text = diff >= 0
+                    ? '${m.name} should receive ₹$diff'
+                    : '${m.name} owes ₹${-diff}';
                 return ListTile(title: Text(text));
               }),
               const SizedBox(height: 20),
-              ElevatedButton(onPressed: () => Navigator.pop(context), child: const Text('Mark as settled')),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Mark as settled'),
+              ),
             ],
           );
         },

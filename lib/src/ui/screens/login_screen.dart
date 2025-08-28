@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -47,7 +48,9 @@ class AuthRepository {
 
       return userCred.user;
     } catch (e) {
-      print("Signup failed: $e");
+      if (kDebugMode) {
+        print("Signup failed: $e");
+      }
       rethrow;
     }
   }
@@ -78,7 +81,9 @@ class AuthRepository {
       final userCred = await _auth.signInWithCredential(credential);
       return userCred.user;
     } catch (e) {
-      print("Google login error: $e");
+      if (kDebugMode) {
+        print("Google login error: $e");
+      }
       return null;
     }
   }
@@ -155,10 +160,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({required this.authRepository}) : super(AuthInitial()) {
     on<AppStarted>((event, emit) {
       final user = authRepository.currentUser;
-      if (user != null)
+      if (user != null) {
         emit(AuthAuthenticated(user));
-      else
+      } else {
         emit(AuthUnauthenticated());
+      }
     });
 
     on<LoginRequested>((event, emit) async {
@@ -262,10 +268,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: emailController,
                     decoration: const InputDecoration(hintText: "Email"),
                     validator: (value) {
-                      if (value == null || value.isEmpty)
+                      if (value == null || value.isEmpty) {
                         return "Email is required";
-                      if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value))
+                      }
+                      if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
                         return "Enter a valid email";
+                      }
                       return null;
                     },
                   ),
@@ -275,10 +283,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     decoration: const InputDecoration(hintText: "Password"),
                     obscureText: true,
                     validator: (value) {
-                      if (value == null || value.isEmpty)
+                      if (value == null || value.isEmpty) {
                         return "Password is required";
-                      if (value.length < 6)
+                      }
+                      if (value.length < 6) {
                         return "Password must be at least 6 characters";
+                      }
                       return null;
                     },
                   ),
@@ -384,10 +394,12 @@ class SignupScreen extends StatelessWidget {
                   decoration: const InputDecoration(hintText: "Email"),
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (value) {
-                    if (value == null || value.isEmpty)
+                    if (value == null || value.isEmpty) {
                       return "Please enter your email";
-                    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value))
+                    }
+                    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
                       return "Enter a valid email";
+                    }
                     return null;
                   },
                 ),
@@ -398,10 +410,12 @@ class SignupScreen extends StatelessWidget {
                   obscureText: true,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (value) {
-                    if (value == null || value.isEmpty)
+                    if (value == null || value.isEmpty) {
                       return "Please enter your password";
-                    if (value.length < 6)
+                    }
+                    if (value.length < 6) {
                       return "Password must be at least 6 characters";
+                    }
                     return null;
                   },
                 ),
@@ -449,8 +463,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   String? _validateEmail(String? value) {
     if (value == null || value.trim().isEmpty) return 'Email is required';
-    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value.trim()))
+    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value.trim())) {
       return 'Enter a valid email';
+    }
     return null;
   }
 
@@ -478,18 +493,23 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
+                    final messenger = ScaffoldMessenger.of(context);
+                    final navigator = Navigator.of(context);
+
                     await context
                         .read<AuthBloc>()
                         .authRepository
                         .forgotPassword(_emailController.text.trim());
-                    ScaffoldMessenger.of(context).showSnackBar(
+
+                    messenger.showSnackBar(
                       SnackBar(
                         content: Text(
                           "Password reset link sent to ${_emailController.text.trim()}",
                         ),
                       ),
                     );
-                    Navigator.pop(context);
+
+                    navigator.pop();
                   }
                 },
                 child: const Text("Send Reset Link"),
@@ -502,15 +522,4 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 }
 
-// class DashboardScreen extends StatelessWidget {
-//   static const routeName = '/home';
-//   const DashboardScreen({super.key});
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: const Text("Home")),
-//       body: const Center(child: Text("Welcome to Home Page 🎉")),
-//     );
-//   }
-// }

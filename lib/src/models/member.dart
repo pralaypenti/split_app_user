@@ -1,11 +1,12 @@
-import 'package:equatable/equatable.dart';
+import 'package:hive/hive.dart';
+part 'member.g.dart';
 
-class Member extends Equatable {
+@HiveType(typeId: 1)
+class Member {
+  @HiveField(0)
   final String id;
+  @HiveField(1)
   final String name;
 
-  const Member({required this.id, required this.name});
-
-  @override
-  List<Object?> get props => [id, name];
+  Member({required this.id, required this.name});
 }

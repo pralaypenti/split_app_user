@@ -13,6 +13,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future<void>.delayed(const Duration(milliseconds: 800), () {
+      if (!mounted) return;
       Navigator.of(context).pushReplacementNamed('/onboarding');
     });
   }
@@ -20,7 +21,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SizedBox.expand(child: Image.asset('assets/split.png',fit: BoxFit.cover,)),
+      body: SizedBox.expand(
+        child: Image.asset('assets/split.png', fit: BoxFit.cover),
+      ),
     );
   }
 }

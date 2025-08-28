@@ -4,8 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:split_app_user/src/bloc/group_bloc.dart';
 import 'package:split_app_user/src/models/expense.dart';
 
-
-
 class AddExpenseScreen extends StatefulWidget {
   static const routeName = '/add-expense';
   const AddExpenseScreen({super.key});
@@ -32,25 +30,40 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextField(controller: _title, decoration: const InputDecoration(labelText: 'Title')),
+                TextField(
+                  controller: _title,
+                  decoration: const InputDecoration(labelText: 'Title'),
+                ),
                 const SizedBox(height: 12),
-                TextField(controller: _amount, decoration: const InputDecoration(labelText: 'Amount (₹)'), keyboardType: TextInputType.number),
+                TextField(
+                  controller: _amount,
+                  decoration: const InputDecoration(labelText: 'Amount (₹)'),
+                  keyboardType: TextInputType.number,
+                ),
                 const SizedBox(height: 12),
                 const Text('Paid By'),
                 Wrap(
                   spacing: 8,
-                  children: g.members.map((m) => ChoiceChip(
-                    label: Text(m.name),
-                    selected: _paidBy == m.id,
-                    onSelected: (_) => setState(()=> _paidBy = m.id),
-                  )).toList(),
+                  children: g.members
+                      .map(
+                        (m) => ChoiceChip(
+                          label: Text(m.name),
+                          selected: _paidBy == m.id,
+                          onSelected: (_) => setState(() => _paidBy = m.id),
+                        ),
+                      )
+                      .toList(),
                 ),
                 const Spacer(),
                 ElevatedButton(
                   onPressed: () {
-                    if (_title.text.isEmpty || _amount.text.isEmpty || _paidBy == null) return;
+                    if (_title.text.isEmpty ||
+                        _amount.text.isEmpty ||
+                        _paidBy == null) {
+                      return;
+                    }
                     final exp = Expense(
-                      id: Random().nextInt(1<<32).toString(),
+                      id: Random().nextInt(1 << 32).toString(),
                       title: _title.text,
                       amount: int.tryParse(_amount.text) ?? 0,
                       paidBy: _paidBy!,
@@ -60,7 +73,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                     Navigator.pop(context);
                   },
                   child: const Text('Add Expense'),
-                )
+                ),
               ],
             ),
           );

@@ -1,4 +1,5 @@
 // src/app.dart
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:split_app_user/src/models/member.dart';
@@ -18,7 +19,9 @@ import 'ui/screens/settle_up_screen.dart';
 import 'bloc/group_bloc.dart';
 
 class SplitApp extends StatelessWidget {
-  const SplitApp({super.key});
+  final HiveRepo hiveRepo;
+
+  const SplitApp({super.key, required this.hiveRepo});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +33,7 @@ class SplitApp extends StatelessWidget {
           create: (_) => AuthBloc(authRepository: authRepo)..add(AppStarted()),
         ),
         BlocProvider(
-          create: (_) => GroupBloc(repo: InMemoryRepo())..add(GroupStarted()),
+          create: (_) => GroupBloc(repo: hiveRepo)..add(GroupStarted()),
         ),
       ],
       child: MaterialApp(
@@ -46,7 +49,15 @@ class SplitApp extends StatelessWidget {
           ForgotPasswordScreen.routeName: (_) => const ForgotPasswordScreen(),
           HomeScreen.routeName: (_) => const HomeScreen(),
           CreateGroupScreen.routeName: (_) => const CreateGroupScreen(),
-          AddMembersScreen.routeName: (_) => const AddMembersScreen(defaultMember: Member(id: '1', name: 'John Doe'),),
+          AddMembersScreen.routeName: (_) {
+            final user = FirebaseAuth.instance.currentUser;
+            return AddMembersScreen(
+              defaultMember: Member(
+                id: user?.uid ?? '1',
+                name: user?.displayName ?? user?.email ?? 'Guest User',
+              ),
+            );
+          },
           GroupDetailsScreen.routeName: (_) => const GroupDetailsScreen(),
           AddExpenseScreen.routeName: (_) => const AddExpenseScreen(),
           SettleUpScreen.routeName: (_) => const SettleUpScreen(),
