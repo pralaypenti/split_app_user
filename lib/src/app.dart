@@ -1,9 +1,13 @@
-// src/app.dart
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:split_app_user/src/bloc/auth_sigin_event.dart';
+import 'package:split_app_user/src/bloc/auth_singin_bloc.dart';
 import 'package:split_app_user/src/models/member.dart';
 import 'package:split_app_user/src/repositories/in_memory_repo.dart';
+import 'package:split_app_user/src/repositories/sigin_repo.dart';
+import 'package:split_app_user/src/ui/screens/forgotPassword.dart';
+import 'package:split_app_user/src/ui/screens/signupScreen.dart';
 import 'theme.dart';
 import 'ui/screens/splash_screen.dart';
 import 'ui/screens/onboarding_screen.dart';
